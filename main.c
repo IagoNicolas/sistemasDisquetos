@@ -5,6 +5,8 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 
+// This is the max value without bugs.
+// #define RSA_KEY_BITS 8192
 #define RSA_KEY_BITS 1024
 
 void handleErrors(void) {
@@ -16,53 +18,98 @@ void generate_keypair(RSA **rsa_keypair) {
     BIGNUM *e = BN_new();
     RSA *rsa = RSA_new();
 
-    if (!e || !rsa) {
-        handleErrors();
-    }
+    if (!e || !rsa) { handleErrors(); }
 
     // Set public exponent
     BN_set_word(e, RSA_F4);
 
     // Generate RSA keypair
-    if (!RSA_generate_key_ex(rsa, RSA_KEY_BITS, e, NULL)) {
-        handleErrors();
-    }
+    if (!RSA_generate_key_ex(rsa, RSA_KEY_BITS, e, NULL)) { handleErrors(); }
 
     *rsa_keypair = rsa;
 
     BN_free(e);
 }
 
+void save_keys(RSA *rsa_keypair) {
+    // Save the public key
+    FILE *pub_file = fopen("public_key.txt", "wb");
+    if (!pub_file) { handleErrors(); }
+    PEM_write_RSA_PUBKEY(pub_file, rsa_keypair);
+    fclose(pub_file);
+
+    // Save the private key
+    FILE *priv_file = fopen("private_key.txt", "wb");
+    if (!priv_file) { handleErrors(); }
+    PEM_write_RSAPrivateKey(priv_file, rsa_keypair, NULL, NULL, 0, NULL, NULL);
+    fclose(priv_file);
+}
+
+void write_bn_to_file(FILE *file, const char *label, const BIGNUM *bn) {
+    char *hex = BN_bn2hex(bn);
+    if (!hex) { handleErrors(); }
+    fprintf(file, "%s: %s\n", label, hex);
+    OPENSSL_free(hex);
+}
+
+void save_key_components_hex(RSA *rsa_keypair) {
+    FILE *pub_file = fopen("public_key_components_hex.txt", "w");
+    if (!pub_file) { handleErrors(); }
+
+    const BIGNUM *n = RSA_get0_n(rsa_keypair);
+    const BIGNUM *e = RSA_get0_e(rsa_keypair);
+
+    write_bn_to_file(pub_file, "Modulus (n)", n);
+    write_bn_to_file(pub_file, "Public Exponent (e)", e);
+
+    fclose(pub_file);
+
+    FILE *priv_file = fopen("private_key_components_hex.txt", "w");
+    if (!priv_file) { handleErrors(); }
+
+    const BIGNUM *d = RSA_get0_d(rsa_keypair);
+    const BIGNUM *p = RSA_get0_p(rsa_keypair);
+    const BIGNUM *q = RSA_get0_q(rsa_keypair);
+    const BIGNUM *dmp1 = RSA_get0_dmp1(rsa_keypair);
+    const BIGNUM *dmq1 = RSA_get0_dmq1(rsa_keypair);
+    const BIGNUM *iqmp = RSA_get0_iqmp(rsa_keypair);
+
+    write_bn_to_file(priv_file, "Modulus (n)", n);
+    write_bn_to_file(priv_file, "Public Exponent (e)", e);
+    write_bn_to_file(priv_file, "Private Exponent (d)", d);
+    write_bn_to_file(priv_file, "Prime 1 (p)", p);
+    write_bn_to_file(priv_file, "Prime 2 (q)", q);
+    write_bn_to_file(priv_file, "Exponent 1 (dmp1)", dmp1);
+    write_bn_to_file(priv_file, "Exponent 2 (dmq1)", dmq1);
+    write_bn_to_file(priv_file, "Coefficient (iqmp)", iqmp);
+
+    fclose(priv_file);
+}
+
 int main() {
     RSA *rsa_keypair = NULL;
     generate_keypair(&rsa_keypair);
+    save_keys(rsa_keypair);
+    save_key_components_hex(rsa_keypair);
 
     const char *plaintext = "hello world!";
     int plaintext_len = strlen(plaintext);
 
     // Allocate memory for ciphertext
     unsigned char *ciphertext = (unsigned char *)malloc(RSA_size(rsa_keypair));
-    if (!ciphertext) {
-        handleErrors();
-    }
+    if (!ciphertext) { handleErrors(); }
 
     // Encrypt plaintext
     int ciphertext_len = RSA_public_encrypt(plaintext_len, (unsigned char *)plaintext, ciphertext, rsa_keypair, RSA_PKCS1_PADDING);
-    if (ciphertext_len == -1) {
-        handleErrors();
-    }
+    if (ciphertext_len == -1) { handleErrors(); }
 
     // Allocate memory for decrypted text
     unsigned char *decrypted_text = (unsigned char *)malloc(RSA_size(rsa_keypair));
-    if (!decrypted_text) {
-        handleErrors();
-    }
+    if (!decrypted_text) { handleErrors(); }
 
     // Decrypt ciphertext
     int decrypted_len = RSA_private_decrypt(ciphertext_len, ciphertext, decrypted_text, rsa_keypair, RSA_PKCS1_PADDING);
-    if (decrypted_len == -1) {
-        handleErrors();
-    }
+    if (decrypted_len == -1) { handleErrors(); }
 
     printf("Plaintext: %s\n", plaintext);
     printf("Ciphertext: ");
@@ -74,9 +121,7 @@ int main() {
 
     // Allocate memory for signature
     unsigned char *signature = (unsigned char *)malloc(RSA_size(rsa_keypair));
-    if (!signature) {
-        handleErrors();
-    }
+    if (!signature) { handleErrors(); }
 
     const char *message = "Hello Bob!";
     int message_len = strlen(message);
@@ -89,11 +134,8 @@ int main() {
 
     // Verify signature
     int verified = RSA_verify(NID_sha256, (unsigned char *)message, message_len, signature, signature_len, rsa_keypair);
-    if (verified != 1) {
-        printf("Signature verification failed!\n");
-    } else {
-        printf("Signature verified. Message authenticated!\n");
-    }
+
+    (verified != 1) ? printf("Signature verification failed!\n") : printf("Signature verified. Message authenticated!\n");
 
     // Free memory
     RSA_free(rsa_keypair);
