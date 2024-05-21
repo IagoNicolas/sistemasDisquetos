@@ -1,3 +1,11 @@
+/**
+ * @file main.c
+ * @brief RSA keypair generation, encryption, decryption, and signing.
+ *
+ * This program demonstrates how to generate an RSA keypair, save the keys and key components,
+ * encrypt and decrypt data, and sign and verify messages using the OpenSSL library.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,15 +13,25 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 
-// This is the max value without bugs.
-// #define RSA_KEY_BITS 8192
+/**
+ * @def RSA_KEY_BITS
+ * @brief Number of bits in the RSA key. Max supported value is 8192.
+ */
 #define RSA_KEY_BITS 1024
 
+/**
+ * @brief Handles OpenSSL errors by printing them and aborting the program.
+ */
 void handleErrors(void) {
     ERR_print_errors_fp(stderr);
     abort();
 }
 
+/**
+ * @brief Generates an RSA keypair.
+ *
+ * @param[out] rsa_keypair Pointer to an RSA structure that will hold the generated keypair.
+ */
 void generate_keypair(RSA **rsa_keypair) {
     BIGNUM *e = BN_new();
     RSA *rsa = RSA_new();
@@ -31,6 +49,11 @@ void generate_keypair(RSA **rsa_keypair) {
     BN_free(e);
 }
 
+/**
+ * @brief Saves the RSA keypair to files.
+ *
+ * @param[in] rsa_keypair Pointer to the RSA keypair to save.
+ */
 void save_keys(RSA *rsa_keypair) {
     // Save the public key
     FILE *pub_file = fopen("public_key.txt", "wb");
@@ -45,6 +68,13 @@ void save_keys(RSA *rsa_keypair) {
     fclose(priv_file);
 }
 
+/**
+ * @brief Writes a BIGNUM value to a file with a label.
+ *
+ * @param[in] file File pointer to write to.
+ * @param[in] label Label for the BIGNUM value.
+ * @param[in] bn BIGNUM value to write.
+ */
 void write_bn_to_file(FILE *file, const char *label, const BIGNUM *bn) {
     char *dec = BN_bn2dec(bn);
     if (!dec) { handleErrors(); }
@@ -52,7 +82,12 @@ void write_bn_to_file(FILE *file, const char *label, const BIGNUM *bn) {
     OPENSSL_free(dec);
 }
 
-void save_key_components_hex(RSA *rsa_keypair) {
+/**
+ * @brief Saves the RSA key components in decimal format to files.
+ *
+ * @param[in] rsa_keypair Pointer to the RSA keypair.
+ */
+void save_key_components(RSA *rsa_keypair) {
     FILE *pub_file = fopen("public_key_components_hex.txt", "w");
     if (!pub_file) { handleErrors(); }
 
@@ -86,11 +121,16 @@ void save_key_components_hex(RSA *rsa_keypair) {
     fclose(priv_file);
 }
 
+/**
+ * @brief Main function demonstrating RSA keypair generation, encryption, decryption, and signing.
+ *
+ * @return int Returns 0 on success, other values on failure.
+ */
 int main() {
     RSA *rsa_keypair = NULL;
     generate_keypair(&rsa_keypair);
     save_keys(rsa_keypair);
-    save_key_components_hex(rsa_keypair);
+    save_key_components(rsa_keypair);
 
     const char *plaintext = "hello world!";
     int plaintext_len = strlen(plaintext);
