@@ -46,10 +46,10 @@ void save_keys(RSA *rsa_keypair) {
 }
 
 void write_bn_to_file(FILE *file, const char *label, const BIGNUM *bn) {
-    char *hex = BN_bn2hex(bn);
-    if (!hex) { handleErrors(); }
-    fprintf(file, "%s: %s\n", label, hex);
-    OPENSSL_free(hex);
+    char *dec = BN_bn2dec(bn);
+    if (!dec) { handleErrors(); }
+    fprintf(file, "%s: %s\n", label, dec);
+    OPENSSL_free(dec);
 }
 
 void save_key_components_hex(RSA *rsa_keypair) {
