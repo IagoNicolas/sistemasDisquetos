@@ -1,0 +1,44 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{bchart}
+\usepackage{float}
+\usepackage{tikz}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+
+\restoregeometry % restores the geometry
+\nopagecolor% Use this to restore the color pages to white
+
+\section{O algoritmo}
+\subsection{Gerar chaves}
+\begin{itemize}
+    \item Escolhe-se de forma aleatória 2 numeros primos, definimos variáveis $p$ e $q$ para eles.
+    \item Em seguida, calcula-se: $n = p * q$
+    \item Calcula-se então: $\Phi(n) = (p - 1) * (q - 1)$
+    \item Escolhe-se então um inteiro $e$, tal que $1 < e < \Phi(n)$ de forma que $e$ e $\Phi(n)$ sejam primos entre si
+    \item Então se calcula $d$ de forma que $d * e \equiv 1$
+\end{itemize}
+
+Na saída dos processos acima, temos o par $(n, e)$ que é a chave pública e a tripla $(p, q, d)$ como chaves privadas.
+
+\subsection{Encriptação}
+Para transformar a mensagem $m$, em que $1 < m < n - 1$, em uma mensagem cifrada $c$, utiliza-se a chave pública para calcular $m^{e} \equiv c$ mod$(n)$.
+
+\subsection{Decriptação}
+Para recuperar a mensagem $m$ a partir de $c$, utiliza-se a chave privada do receptor $n$ e $d$. Calcula-se então: $c^{d} \equiv m$ mod$(n)$.
+
+\subsection{Assinatura digital}
+Para implementar um sistema de assinaturas digitais com RSA, o utilizador que possua uma chave privada d poderá assinar uma dada mensagem (em blocos) m com a seguinte expressão: $s = m^{d}$ mod$(n)$.
+
+O receptor recupera a mensagem utilizando a chave pública e do emissor: $s^{e} = (m^{d})^{e}$ mod$(n = m)$ mod$(n)$.
+
+\end{document}
