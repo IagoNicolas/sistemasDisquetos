@@ -1,1 +1,1 @@
-/usr/bin/cc -g CMakeFiles/sistemasDisquetos.dir/main.c.o CMakeFiles/sistemasDisquetos.dir/test_main.c.o -o sistemasDisquetos  -lcrypto -lCUnit 
+/usr/bin/cc -g CMakeFiles/sistemasDisquetos.dir/main.c.o -o sistemasDisquetos  -lcrypto 

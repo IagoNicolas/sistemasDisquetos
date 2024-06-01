@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/sistemasDisquetos.dir/main.c.o"
   "CMakeFiles/sistemasDisquetos.dir/main.c.o.d"
-  "CMakeFiles/sistemasDisquetos.dir/test_main.c.o"
-  "CMakeFiles/sistemasDisquetos.dir/test_main.c.o.d"
   "sistemasDisquetos"
   "sistemasDisquetos.pdb"
 )

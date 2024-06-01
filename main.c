@@ -142,7 +142,7 @@ int main() {
     int plaintext_len = strlen(plaintext);
 
     // Allocate memory for ciphertext
-    unsigned char *ciphertext = (unsigned char *)malloc(RSA_size(rsa_keypair));
+    unsigned char *ciphertext = (unsigned char *) malloc(RSA_size(rsa_keypair));
     if (!ciphertext) { handleErrors(); }
 
     // Encrypt plaintext

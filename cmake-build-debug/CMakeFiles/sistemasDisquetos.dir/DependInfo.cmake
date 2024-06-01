@@ -9,7 +9,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/necronzero/CLionProjects/sistemasDisquetos/main.c" "CMakeFiles/sistemasDisquetos.dir/main.c.o" "gcc" "CMakeFiles/sistemasDisquetos.dir/main.c.o.d"
-  "/home/necronzero/CLionProjects/sistemasDisquetos/test_main.c" "CMakeFiles/sistemasDisquetos.dir/test_main.c.o" "gcc" "CMakeFiles/sistemasDisquetos.dir/test_main.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

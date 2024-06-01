@@ -77,9 +77,6 @@
 		<Unit filename="/home/necronzero/CLionProjects/sistemasDisquetos/main.c">
 			<Option target="sistemasDisquetos"/>
 		</Unit>
-		<Unit filename="/home/necronzero/CLionProjects/sistemasDisquetos/test_main.c">
-			<Option target="sistemasDisquetos"/>
-		</Unit>
 		<Unit filename="/home/necronzero/CLionProjects/sistemasDisquetos/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
