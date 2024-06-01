@@ -81,12 +81,12 @@ clean: CMakeFiles/sistemasDisquetos.dir/clean
 CMakeFiles/sistemasDisquetos.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sistemasDisquetos.dir/build.make CMakeFiles/sistemasDisquetos.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sistemasDisquetos.dir/build.make CMakeFiles/sistemasDisquetos.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/necronzero/CLionProjects/sistemasDisquetos/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target sistemasDisquetos"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/necronzero/CLionProjects/sistemasDisquetos/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target sistemasDisquetos"
 .PHONY : CMakeFiles/sistemasDisquetos.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/sistemasDisquetos.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/necronzero/CLionProjects/sistemasDisquetos/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/necronzero/CLionProjects/sistemasDisquetos/cmake-build-debug/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/sistemasDisquetos.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/necronzero/CLionProjects/sistemasDisquetos/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/sistemasDisquetos.dir/rule

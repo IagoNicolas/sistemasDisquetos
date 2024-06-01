@@ -6,6 +6,7 @@
  * encrypt and decrypt data, and sign and verify messages using the OpenSSL library.
  */
 
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -127,6 +128,11 @@ void save_key_components(RSA *rsa_keypair) {
  * @return int Returns 0 on success, other values on failure.
  */
 int main() {
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
     RSA *rsa_keypair = NULL;
     generate_keypair(&rsa_keypair);
     save_keys(rsa_keypair);
@@ -182,6 +188,10 @@ int main() {
     free(ciphertext);
     free(decrypted_text);
     free(signature);
+
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Time taken: %f seconds\n", cpu_time_used);
 
     return 0;
 }

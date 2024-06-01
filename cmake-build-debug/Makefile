@@ -153,6 +153,30 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sistemasDisquetos.dir/build.make CMakeFiles/sistemasDisquetos.dir/main.c.s
 .PHONY : main.c.s
 
+test_main.o: test_main.c.o
+.PHONY : test_main.o
+
+# target to build an object file
+test_main.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sistemasDisquetos.dir/build.make CMakeFiles/sistemasDisquetos.dir/test_main.c.o
+.PHONY : test_main.c.o
+
+test_main.i: test_main.c.i
+.PHONY : test_main.i
+
+# target to preprocess a source file
+test_main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sistemasDisquetos.dir/build.make CMakeFiles/sistemasDisquetos.dir/test_main.c.i
+.PHONY : test_main.c.i
+
+test_main.s: test_main.c.s
+.PHONY : test_main.s
+
+# target to generate assembly for a file
+test_main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sistemasDisquetos.dir/build.make CMakeFiles/sistemasDisquetos.dir/test_main.c.s
+.PHONY : test_main.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -165,6 +189,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... test_main.o"
+	@echo "... test_main.i"
+	@echo "... test_main.s"
 .PHONY : help
 
 
