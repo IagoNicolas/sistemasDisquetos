@@ -1,10 +1,12 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
 \usepackage{amsfonts}
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{indentfirst}
 \usepackage[left=1.6cm, right=1.6cm, top=2cm, bottom=2cm]{geometry}
 
 \lstdefinestyle{CStyle}{
@@ -283,6 +285,78 @@ A probabilidade de \( \text{MDC}(m, n) \neq 1 \):
 \[
 P(\text{MDC}(m, n) \neq 1) = 1 - 0.60793 \approx 0.39207
 \]
+
+\subsection*{AES (Advanced Encryption Standard)}
+
+O AES (Advanced Encryption Standard) é um algoritmo de criptografia simétrica que utiliza a mesma chave para criptografar e descriptografar dados. Foi adotado como um padrão de criptografia pelo governo dos Estados Unidos e é amplamente utilizado devido à sua segurança e eficiência.
+
+\subsection*{Fundamentação Teórica do AES}
+
+O AES opera em blocos de 128 bits e utiliza chaves de 128, 192 ou 256 bits. A segurança do AES é baseada em conceitos da teoria dos números e da álgebra abstrata, como operações em campos finitos.
+
+\subsection*{Estrutura do AES}
+
+O AES realiza uma série de operações em cada bloco de dados:
+
+\begin{itemize}
+    \item \textbf{SubBytes}: Substituição de cada byte no bloco usando uma tabela de substituição (S-box). A S-box é gerada a partir do inverso multiplicativo em um campo finito (GF($2^8$)) combinado com uma transformação afim. Esta operação introduz não-linearidade, fundamental para a segurança do AES.
+    \[
+    S(x) = A \cdot x^{-1} \oplus B
+    \]
+    onde $S(x)$ é o valor da S-box, $x^{-1}$ é o inverso multiplicativo de $x$ em GF($2^8$), $A$ é uma matriz fixa, e $B$ é um vetor constante.
+
+    \item \textbf{ShiftRows}: Deslocamento circular das linhas da matriz de estado. Esta operação fornece difusão, distribuindo a influência de cada byte sobre o bloco de dados.
+    \[
+    \text{ShiftRows}(s) = \begin{bmatrix}
+    s_{0,0} & s_{0,1} & s_{0,2} & s_{0,3} \\
+    s_{1,1} & s_{1,2} & s_{1,3} & s_{1,0} \\
+    s_{2,2} & s_{2,3} & s_{2,0} & s_{2,1} \\
+    s_{3,3} & s_{3,0} & s_{3,1} & s_{3,2} \\
+    \end{bmatrix}
+    \]
+
+    \item \textbf{MixColumns}: Mistura das colunas da matriz de estado utilizando multiplicações em um campo finito. Esta operação transforma cada coluna da matriz de estado para garantir que a saída de cada rodada dependa de todos os bytes da entrada. A multiplicação em campos finitos, especificamente GF($2^8$), garante que esta operação seja invertível, o que é crucial para a descriptografia.
+    \[
+    \text{MixColumns}(a) = \begin{bmatrix}
+    2 & 3 & 1 & 1 \\
+    1 & 2 & 3 & 1 \\
+    1 & 1 & 2 & 3 \\
+    3 & 1 & 1 & 2 \\
+    \end{bmatrix} \times \begin{bmatrix}
+    a_{0} \\
+    a_{1} \\
+    a_{2} \\
+    a_{3} \\
+    \end{bmatrix}
+    \]
+    onde a multiplicação e adição são realizadas em GF($2^8$).
+
+    \item \textbf{AddRoundKey}: Adição da chave de rodada à matriz de estado utilizando uma operação XOR. Esta operação combina os dados da mensagem com a chave de criptografia, introduzindo segurança dependente da chave.
+    \[
+    \text{AddRoundKey}(s, k) = s \oplus k
+    \]
+    onde $s$ é a matriz de estado e $k$ é a subchave de rodada.
+\end{itemize}
+
+Cada rodada, exceto a última, consiste em todas as quatro operações. A última rodada omite a operação MixColumns.
+
+\subsection*{Vantagens do AES}
+
+\begin{itemize}
+    \item \textbf{Eficiência}: AES é altamente eficiente em termos de desempenho, especialmente em hardware, devido à sua capacidade de ser implementado de forma otimizada em diversos dispositivos.
+    \item \textbf{Segurança}: AES oferece um alto nível de segurança, sendo resistente a vários tipos de ataques criptográficos conhecidos, como ataques de força bruta e criptoanálise diferencial.
+    \item \textbf{Flexibilidade}: AES pode ser usado com diferentes tamanhos de chave (128, 192 e 256 bits), proporcionando um equilíbrio entre segurança e desempenho.
+\end{itemize}
+
+\subsection*{Operações em Campos Finitos (GF($2^8$))}
+
+A teoria dos números e a álgebra abstrata fornecem a base para muitas operações no AES, especialmente as realizadas no campo finito GF($2^8$). Um campo finito é um conjunto de números onde todas as operações (adição, subtração, multiplicação e divisão) são realizadas de acordo com as regras da aritmética modular.
+
+No contexto do AES, cada byte (8 bits) é tratado como um elemento do campo finito GF($2^8$). As operações de substituição e mistura no AES garantem que o algoritmo possui uma alta avalanche, onde uma pequena mudança na entrada resulta em uma grande mudança na saída, uma propriedade crucial para a segurança de um algoritmo criptográfico.
+
+\subsection*{Segurança do AES}
+
+A segurança do AES baseia-se na complexidade das operações em campos finitos e na dificuldade de resolver sistemas de equações algébricas envolvendo essas operações. A transformação não-linear (SubBytes) e a difusão (ShiftRows e MixColumns) asseguram que o AES resista a criptoanálises lineares e diferenciais, fornecendo um algoritmo robusto e seguro para criptografia de dados.
 
 \section*{Metodologia}
 A metodologia para este projeto envolveu a implementação do algoritmo RSA, seguida por uma série de testes para verificar sua eficácia e desempenho. Abaixo estão as etapas detalhadas do projeto.
@@ -685,6 +759,71 @@ h7 := h7 + h
         \end{itemize}
 \end{enumerate}
 
+\section*{Criptografia Híbrida: Integração de AES com RSA}
+A criptografia híbrida combina os pontos fortes dos algoritmos de criptografia assimétrica (RSA) e simétrica (AES) para obter maior eficiência e segurança. A seguir, apresentamos a implementação dessa integração utilizando a linguagem C e as bibliotecas OpenSSL.
+
+\subsection*{Implementação da Criptografia Híbrida}
+A implementação do AES e RSA em conjunto permite a criptografia de mensagens maiores com menor perda de desempenho. A seguir, apresentamos a estrutura do código C que implementa essa abordagem complementando o código RSA anterior.
+
+\begin{lstlisting}[style=CStyle]
+    int aes_encrypt(
+        const unsigned char *plaintext,
+        int plaintext_len, unsigned char *ciphertext,
+        unsigned char *iv,
+        const unsigned char *key
+        ) {
+        EVP_CIPHER_CTX *ctx;
+        int len;
+        int ciphertext_len;
+
+        if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
+        if (1 != EVP_EncryptInit_ex(
+            ctx, EVP_aes_256_cbc(), NULL, key, iv)
+            ) handleErrors();
+        if (1 != EVP_EncryptUpdate(
+            ctx, ciphertext, &len, plaintext, plaintext_len
+            )) handleErrors();
+        ciphertext_len = len;
+        if (1 != EVP_EncryptFinal_ex(
+            ctx, ciphertext + len, &len
+            )) handleErrors();
+        ciphertext_len += len;
+        EVP_CIPHER_CTX_free(ctx);
+
+        return ciphertext_len;
+    }
+
+    int aes_decrypt(
+        const unsigned char *ciphertext,
+        int ciphertext_len,
+        unsigned char *plaintext,
+        const unsigned char *iv,
+        const unsigned char *key
+        ) {
+        EVP_CIPHER_CTX *ctx;
+        int len;
+        int plaintext_len;
+
+        if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
+        if (1 != EVP_DecryptInit_ex(
+            ctx, EVP_aes_256_cbc(), NULL, key, iv
+            )) handleErrors();
+        if (1 != EVP_DecryptUpdate(
+            ctx, plaintext, &len, ciphertext, ciphertext_len
+            )) handleErrors();
+        plaintext_len = len;
+        if (1 != EVP_DecryptFinal_ex(
+            ctx, plaintext + len, &len
+            )) handleErrors();
+        plaintext_len += len;
+        EVP_CIPHER_CTX_free(ctx);
+
+        return plaintext_len;
+    }
+\end{lstlisting}
+
+Com a junção de ambos códigos, utilizamos o RSA para criptografar uma chave AES gerada aleatoriamente. A mensagem original é então criptografada usando a chave AES. Essa abordagem oferece várias vantagens, especialmente quanto à performance.
+
 \section*{Análise}
 A análise dos resultados focou na comparação entre os resultados obtidos e os esperados, destacando os desafios encontrados durante o processo.
 
@@ -692,13 +831,21 @@ A análise dos resultados focou na comparação entre os resultados obtidos e os
 Os testes de correção mostraram que o sistema RSA implementado conseguiu criptografar e descriptografar mensagens corretamente, confirmando a precisão da implementação. As mensagens criptografadas foram recuperadas integralmente após a descriptografia, demonstrando que o algoritmo foi implementado corretamente.
 
 \subsection*{Desempenho}
-Os testes de desempenho revelaram que, embora o RSA seja eficiente para mensagens curtas, o tempo de execução aumenta significativamente para mensagens maiores. Isso se deve à complexidade da aritmética modular com números grandes. A criptografia e descriptografia de mensagens longas resultaram em tempos de execução elevados, o que pode ser um fator limitante em aplicações práticas que exigem processamento em tempo real.
+Os testes de desempenho revelaram que, embora o RSA seja eficiente para mensagens curtas, o tempo de execução aumenta significativamente para mensagens maiores. Isso se deve à complexidade da aritmética modular com números grandes. A criptografia e descriptografia de mensagens longas resultaram em tempos de execução elevados, o que pode ser um fator limitante em aplicações práticas que exigem processamento em tempo real. No entanto, ao utilizar AES (Advanced Encryption Standard), é possível criptografar mensagens maiores com menor perda de desempenho. O AES é otimizado para grandes volumes de dados e oferece uma combinação de segurança e eficiência, tornando-se uma escolha ideal para cenários que demandam alta performance e manuseio de grandes quantidades de informação.
 
 \subsection*{Segurança}
 Os testes de segurança indicaram que o sistema RSA é robusto contra ataques de fatoração, desde que os números primos escolhidos sejam suficientemente grandes. No entanto, foi identificado que a geração de chaves pode ser um ponto fraco se não for realizada com cuidado, pois a escolha inadequada de primos pode comprometer a segurança. A análise de ataques de força bruta mostrou que, com números primos grandes, o RSA oferece uma segurança sólida contra tais ataques.
 
 \subsection*{Desafios e Problemas}
 Durante a implementação, foram encontradas dificuldades relacionadas à eficiência da geração de números primos grandes e à execução de operações aritméticas com números extremamente grandes. Além disso, a gestão de chaves revelou-se um desafio, destacando a necessidade de um armazenamento seguro e eficiente das chaves privadas. A geração de chaves RSA é um processo computacionalmente intensivo, e a escolha de números primos inadequados pode resultar em uma chave vulnerável.
+
+Além desses desafios, o tamanho da mensagem também se mostrou um problema significativo. O RSA é eficiente para criptografar dados de tamanho pequeno, mas seu desempenho cai drasticamente à medida que o tamanho da mensagem aumenta. Isso ocorre devido à complexidade das operações aritméticas envolvidas, que são exponencialmente mais lentas para mensagens grandes. Para contornar essa limitação, a implementação de uma abordagem híbrida usando AES (Advanced Encryption Standard) foi essencial.
+
+A criptografia RSA, embora altamente segura, não é adequada para mensagens grandes devido ao seu limite de tamanho de bloco, que é diretamente relacionado ao tamanho da chave. Por exemplo, com uma chave RSA de 1024 bits, o tamanho máximo de dados que podem ser criptografados diretamente é de aproximadamente 117 bytes, após descontar o espaço necessário para o padding. Isso torna a criptografia de mensagens maiores um desafio significativo.
+
+Para resolver essa limitação, foi necessário adotar a criptografia híbrida, combinando RSA e AES. Com essa abordagem, a mensagem é criptografada usando AES, que é um algoritmo de criptografia simétrica eficiente para grandes volumes de dados e em seguida, a chave AES gerada aleatoriamente é criptografada usando RSA. Esse método proporciona grandes benefícios relacionados à performance.
+
+Ao implementar a criptografia híbrida, conseguimos superar as limitações do RSA para mensagens grandes, aproveitando a eficiência do AES. Esta abordagem não só melhora o desempenho, mas também mantém um alto nível de segurança. A combinação de RSA e AES é ideal para aplicações que necessitam de criptografia robusta e eficiente para grandes volumes de dados.
 
 \subsection*{Análise Comparativa}
 Foi realizada uma análise comparativa entre o RSA e outros algoritmos de criptografia assimétrica, como o ElGamal e o ECC. A análise mostrou que o RSA oferece uma boa combinação de segurança e facilidade de implementação, mas enfrenta desafios de desempenho em comparação com algoritmos baseados em curvas elípticas (ECC), que podem oferecer uma segurança equivalente com chaves menores e operações mais rápidas.
@@ -712,8 +859,12 @@ Para melhorar o desempenho do RSA, podem ser consideradas otimizações como a E
 \section*{Conclusão}
 O sistema criptográfico RSA, embora complexo, é uma ferramenta poderosa para a criptografia de dados. A implementação prática do RSA mostrou-se eficaz na proteção de informações, confirmando a teoria subjacente. No entanto, desafios relacionados ao desempenho e à gestão de chaves foram identificados.
 
+Para superar esses desafios, a integração do AES (Advanced Encryption Standard) como parte de uma abordagem híbrida se mostrou essencial. O AES permite a criptografia de grandes volumes de dados com alta eficiência, enquanto o RSA é utilizado para a criptografia segura da chave AES. Essa combinação aproveita as vantagens de ambos os algoritmos, resultando em uma solução criptográfica que é ao mesmo tempo segura e eficiente. A abordagem híbrida não apenas melhora o desempenho, mas também facilita a gestão de chaves, tornando-a mais adequada para aplicações práticas que exigem processamento rápido e seguro de grandes volumes de dados.
+
 \subsection*{Comentários sobre os Modelos Utilizados}
 O modelo teórico do RSA é sólido, baseado em princípios matemáticos bem estabelecidos. A implementação prática demonstrou a viabilidade do RSA para aplicações reais, embora a eficiência possa ser um problema para grandes volumes de dados. A escolha cuidadosa de números primos e a geração segura de chaves são cruciais para a eficácia do RSA.
+
+A adição do AES (Advanced Encryption Standard) ao modelo de criptografia híbrida melhora significativamente a eficiência para grandes volumes de dados. O AES, sendo um algoritmo de criptografia simétrica, é muito mais rápido que o RSA para processar grandes quantidades de informações. Ao utilizar o RSA para criptografar apenas a chave AES e o AES para criptografar os dados, conseguimos um equilíbrio entre segurança e desempenho. Essa abordagem híbrida permite aproveitar a robustez do RSA para troca segura de chaves e a velocidade do AES para criptografia de dados volumosos, tornando a solução mais prática e eficaz para aplicações que exigem processamento rápido e seguro de grandes volumes de dados.
 
 \subsection*{Possíveis Aplicações}
 O RSA pode ser utilizado em diversas áreas, incluindo comunicação segura, assinatura digital e proteção de dados sensíveis. Sua capacidade de fornecer segurança robusta torna-o adequado para aplicações em setores financeiros, governamentais e de TI. No entanto, a aplicação do RSA em ambientes com restrições de recursos requer atenção especial aos requisitos computacionais.
@@ -722,12 +873,41 @@ O RSA pode ser utilizado em diversas áreas, incluindo comunicação segura, ass
 Para melhorar o desempenho do RSA, pode-se considerar o uso de otimizações como a Exponenciação Modular Rápida e algoritmos eficientes de geração de primos. Além disso, a combinação do RSA com outros métodos de criptografia pode oferecer um equilíbrio entre segurança e eficiência. A implementação de hardware específico para operações aritméticas pode também melhorar o desempenho em aplicações críticas. A adoção de práticas de gestão de chaves seguras é essencial para garantir a integridade e a confidencialidade dos dados.
 
 \section*{Referências}
-\begin{itemize}
-    \item Rivest, R. L., Shamir, A., \& Adleman, L. (1978). A Method for Obtaining Digital Signatures and Public-Key Cryptosystems. Communications of the ACM, 21(2), 120-126.
-    \item Menezes, A. J., van Oorschot, P. C., \& Vanstone, S. A. (1996). Handbook of Applied Cryptography. CRC Press.
-    \item Trappe, W., \& Washington, L. C. (2006). Introduction to Cryptography with Coding Theory. Pearson.
-    \item Stallings, W. (2016). Cryptography and Network Security: Principles and Practice. Pearson.
-    \item Schneier, B. (1996). Applied Cryptography: Protocols, Algorithms, and Source Code in C. John Wiley \& Sons.
-\end{itemize}
-
+\begin{thebibliography}{}
+    \bibitem{Rivest1978}
+    Rivest, R. L., Shamir, A., \& Adleman, L. (1978). A Method for Obtaining Digital Signatures and Public-Key Cryptosystems. \textit{Communications of the ACM}, 21(2), 120-126.
+    
+    \bibitem{Menezes1996}
+    Menezes, A. J., van Oorschot, P. C., \& Vanstone, S. A. (1996). \textit{Handbook of Applied Cryptography}. CRC Press.
+    
+    \bibitem{Trappe2006}
+    Trappe, W., \& Washington, L. C. (2006). \textit{Introduction to Cryptography with Coding Theory}. Pearson.
+    
+    \bibitem{Stallings2016}
+    Stallings, W. (2016). \textit{Cryptography and Network Security: Principles and Practice}. Pearson.
+    
+    \bibitem{Schneier1996}
+    Schneier, B. (1996). \textit{Applied Cryptography: Protocols, Algorithms, and Source Code in C}. John Wiley \& Sons.
+    
+    \bibitem{OpenSSL}
+    OpenSSL Project. (n.d.). OpenSSL Crypto Library. Retrieved from \url{https://www.openssl.org/docs/man3.0/man7/crypto.html}
+    
+    \bibitem{WikipediaRSA}
+    Wikipedia. (n.d.). RSA (cryptosystem). Retrieved from \url{https://en.wikipedia.org/wiki/RSA_(cryptosystem)}
+    
+    \bibitem{WikipediaAES}
+    Wikipedia. (n.d.). Advanced Encryption Standard. Retrieved from \url{https://pt.wikipedia.org/wiki/Advanced_Encryption_Standard}
+    
+    \bibitem{Opensource2019}
+    Opensource.com. (2019). Cryptography basics with OpenSSL, part 1. Retrieved from \url{https://opensource.com/article/19/6/cryptography-basics-openssl-part-1}
+    
+    \bibitem{RedHat}
+    Red Hat. (n.d.). Using OpenSSL. Retrieved from \url{https://access.redhat.com/documentation/pt-br/red_hat_enterprise_linux/7/html/security_guide/sec-using_openssl}
+    
+    \bibitem{LinuxJournal2004}
+    Linux Journal. (2004). An Introduction to OpenSSL Programming. Retrieved from \url{https://www.linuxjournal.com/article/6826}
+    
+    \bibitem{Rajesh2019}
+    Rajesh, B. N. (2019). Understanding RSA Public Key. Medium. Retrieved from \url{https://medium.com/@bn121rajesh/understanding-rsa-public-key-70d900b1033c}
+    \end{thebibliography}
 \end{document}
