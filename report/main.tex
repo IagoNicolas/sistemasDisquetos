@@ -43,16 +43,16 @@ Os objetivos principais deste projeto incluem:
 Para a execução deste projeto, são necessários alguns pré-requisitos:
 \begin{itemize}
     \item Conhecimento básico de teoria dos números e álgebra, especialmente conceitos relacionados a números primos e fatoração.
-    \item Ferramentas de programação, preferencialmente Python, devido à sua simplicidade e ampla gama de bibliotecas matemáticas.
+    \item Ferramentas de programação, como C, C++ ou Python.
     \item Dados de teste para verificar a eficácia da criptografia e descriptografia.
 \end{itemize}
 
 \subsection*{Roteiro}
-O projeto segue um roteiro estruturado em várias etapas, que incluem:
+O projeto segue um roteiro estruturado nas seguintes etapas:
 \begin{enumerate}
     \item Revisão de literatura sobre criptografia assimétrica e o algoritmo RSA.
     \item Estudo aprofundado da teoria matemática por trás do RSA, incluindo números primos, fatoração e aritmética modular.
-    \item Implementação prática do RSA utilizando Python.
+    \item Implementação prática do RSA utilizando C.
     \item Realização de testes de criptografia e descriptografia com diferentes tipos e tamanhos de dados.
     \item Análise dos resultados obtidos, identificando desafios e propondo melhorias.
     \item Conclusões e recomendações finais sobre a aplicação do RSA.
@@ -371,7 +371,7 @@ Os requisitos do sistema foram verificados através de uma série de testes que 
 \end{enumerate}
 
 \subsection*{Resultados Esperados}
-Esperava-se que o sistema RSA fosse capaz de criptografar e descriptografar mensagens de forma segura e eficiente, com tempos de execução razoáveis para mensagens de tamanho moderado. Além disso, o sistema deveria demonstrar robustez contra tentativas de ataques.
+Esperava-se que tanto o sistema RSA quando o sistema RSA + AES fossem capazes de criptografar e descriptografar mensagens de forma segura e eficiente, com tempos de execução razoáveis para mensagens de tamanho pequeno no caso do RSA e grande no caso do RSA + AES. Além disso, o sistema deveria demonstrar robustez contra tentativas de ataques.
 
 \subsection*{Ambiente de Desenvolvimento}
 O ambiente de desenvolvimento para a implementação do RSA foi configurado em uma máquina local com as seguintes especificações:
@@ -487,7 +487,9 @@ A função generate\_keypair é responsável por gerar o par de chaves RSA. Vamo
 
         FILE *priv_file = fopen("private_key.txt", "wb");
         if (!priv_file) { handleErrors(); }
-        PEM_write_RSAPrivateKey(priv_file, rsa_keypair, NULL, NULL, 0, NULL, NULL);
+        PEM_write_RSAPrivateKey(
+            priv_file, rsa_keypair, NULL, NULL, 0, NULL, NULL
+        );
         fclose(priv_file);
     }
 \end{lstlisting}
@@ -495,7 +497,9 @@ A função save\_keys salva as chaves pública e privada em arquivos no formato 
 
 \subsubsection*{Salvamento dos Componentes das Chaves}
 \begin{lstlisting}[style=CStyle]
-    void write_bn_to_file(FILE *file, const char *label, const BIGNUM *bn) {
+    void write_bn_to_file(
+        FILE *file, const char *label, const BIGNUM *bn
+    ) {
         char *dec = BN_bn2dec(bn);
         if (!dec) { handleErrors(); }
         fprintf(file, "%s: %s\n", label, dec);
@@ -503,7 +507,9 @@ A função save\_keys salva as chaves pública e privada em arquivos no formato 
     }
     
     void save_key_components(RSA *rsa_keypair) {
-        FILE *pub_file = fopen("public_key_components_hex.txt", "w");
+        FILE *pub_file = fopen(
+            "public_key_components_hex.txt", "w"
+        );
         if (!pub_file) { handleErrors(); }
     
         const BIGNUM *n = RSA_get0_n(rsa_keypair);
@@ -514,7 +520,9 @@ A função save\_keys salva as chaves pública e privada em arquivos no formato 
     
         fclose(pub_file);
     
-        FILE *priv_file = fopen("private_key_components_hex.txt", "w");
+        FILE *priv_file = fopen(
+            "private_key_components_hex.txt", "w"
+        );
         if (!priv_file) { handleErrors(); }
     
         const BIGNUM *d = RSA_get0_d(rsa_keypair);
@@ -549,16 +557,32 @@ Esta função salva os componentes das chaves em arquivos separados, permitindo 
         const char *plaintext = "hello world!";
         int plaintext_len = strlen(plaintext);
     
-        unsigned char *ciphertext = (unsigned char *)malloc(RSA_size(rsa_keypair));
+        unsigned char *ciphertext = 
+            (unsigned char *)malloc(RSA_size(rsa_keypair));
         if (!ciphertext) { handleErrors(); }
     
-        int ciphertext_len = RSA_public_encrypt(plaintext_len, (unsigned char *)plaintext, ciphertext, rsa_keypair, RSA_PKCS1_PADDING);
+        int ciphertext_len =
+            RSA_public_encrypt(
+                plaintext_len,
+                (unsigned char *) plaintext,
+                ciphertext,
+                rsa_keypair,
+                RSA_PKCS1_PADDING
+            );
         if (ciphertext_len == -1) { handleErrors(); }
     
-        unsigned char *decrypted_text = (unsigned char *)malloc(RSA_size(rsa_keypair));
+        unsigned char *decrypted_text =
+            (unsigned char *)malloc(RSA_size(rsa_keypair));
         if (!decrypted_text) { handleErrors(); }
     
-        int decrypted_len = RSA_private_decrypt(ciphertext_len, ciphertext, decrypted_text, rsa_keypair, RSA_PKCS1_PADDING);
+        int decrypted_len =
+            RSA_private_decrypt(
+                ciphertext_len,
+                ciphertext,
+                decrypted_text,
+                rsa_keypair,
+                RSA_PKCS1_PADDING
+            );
         if (decrypted_len == -1) { handleErrors(); }
     
         printf("Plaintext: %s\n", plaintext);
@@ -569,20 +593,40 @@ Esta função salva os componentes das chaves em arquivos separados, permitindo 
         printf("\n");
         printf("Decrypted text: %s\n", decrypted_text);
     
-        unsigned char *signature = (unsigned char *)malloc(RSA_size(rsa_keypair));
+        unsigned char *signature =
+            (unsigned char *)malloc(RSA_size(rsa_keypair));
         if (!signature) { handleErrors(); }
     
         const char *message = "Hello Bob!";
         int message_len = strlen(message);
     
         unsigned int signature_len;
-        if (!RSA_sign(NID_sha256, (unsigned char *)message, message_len, signature, &signature_len, rsa_keypair)) {
+        if (!RSA_sign(
+            NID_sha256,
+            (unsigned char *) message,
+            message_len,
+            signature,
+            &signature_len,
+            rsa_keypair
+        )) {
             handleErrors();
         }
     
-        int verified = RSA_verify(NID_sha256, (unsigned char *)message, message_len, signature, signature_len, rsa_keypair);
+        int verified =
+            RSA_verify(
+                NID_sha256,
+                (unsigned char *) message,
+                message_len,
+                signature,
+                signature_len,
+                rsa_keypair
+            );
     
-        (verified != 1) ? printf("Signature verification failed!\n") : printf("Signature verified. Message authenticated!\n");
+        (verified != 1) ? printf(
+            "Signature verification failed!\n"
+        ) : printf(
+            "Signature verified. Message authenticated!\n"
+        );
     
         RSA_free(rsa_keypair);
         free(ciphertext);
@@ -619,7 +663,6 @@ A função main realiza as operações de criptografia, descriptografia, assinat
 \subsubsection*{Assinatura Digital usando SHA-256 e RSA}
 A autenticação e a integridade da mensagem são garantidas combinando a função de hash SHA-256 com o algoritmo de criptografia RSA.
 
-\textbf*{Geração de Assinatura Digital}
 A função de hash SHA-256 (Secure Hash Algorithm 256-bit) é um dos algoritmos mais amplamente utilizados para garantir a integridade e a autenticidade de dados em segurança da informação. Abaixo, explicamos como a função de hash SHA-256 funciona em detalhes.
 
 Uma função de hash criptográfica é um algoritmo que recebe uma entrada (ou mensagem) de qualquer tamanho e produz uma saída fixa (chamada de hash) de tamanho determinado. No caso do SHA-256, a saída é um valor hash de 256 bits (32 bytes).
@@ -633,7 +676,6 @@ Alguns motívos de nossa escolha é:
     \item \textbf{Resistente a Colisão:} É difícil encontrar duas mensagens diferentes \(M_{1}\) e \(M_{2}\) que tenham o mesmo hash.
 \end{itemize}
 
-\textbf*{Etapas do SHA-256}
 A função SHA-256 processa a mensagem de entrada em várias etapas para produzir o valor hash final. Aqui estão os passos principais:
 
 \begin{enumerate}
@@ -722,10 +764,16 @@ Considere a mensagem "abc" para o exemplo simplificado a seguir:
             \item Realizam-se as 64 rodadas de operações de mistura para cada bloco, como o exemplo a seguir:
             \begin{lstlisting}
 for i from 0 to 63:
-    S1 := (e rightrotate 6) ^ (e rightrotate 11) ^ (e rightrotate 25)
-    ch := (e and f) ^ ((not e) and g)
+    S1 :=
+        (e rightrotate 6) ^
+        (e rightrotate 11) ^
+        (e rightrotate 25)
+    ch := (e and f)^((not e) and g)
     temp1 := h + S1 + ch + k[i] + w[i]
-    S0 := (a rightrotate 2) ^ (a rightrotate 13) ^ (a rightrotate 22)
+    S0 :=
+        (a rightrotate 2) ^
+        (a rightrotate 13) ^
+        (a rightrotate 22)
     maj := (a and b) ^ (a and c) ^ (b and c)
     temp2 := S0 + maj
 
@@ -831,7 +879,7 @@ A análise dos resultados focou na comparação entre os resultados obtidos e os
 Os testes de correção mostraram que o sistema RSA implementado conseguiu criptografar e descriptografar mensagens corretamente, confirmando a precisão da implementação. As mensagens criptografadas foram recuperadas integralmente após a descriptografia, demonstrando que o algoritmo foi implementado corretamente.
 
 \subsection*{Desempenho}
-Os testes de desempenho revelaram que, embora o RSA seja eficiente para mensagens curtas, o tempo de execução aumenta significativamente para mensagens maiores. Isso se deve à complexidade da aritmética modular com números grandes. A criptografia e descriptografia de mensagens longas resultaram em tempos de execução elevados, o que pode ser um fator limitante em aplicações práticas que exigem processamento em tempo real. No entanto, ao utilizar AES (Advanced Encryption Standard), é possível criptografar mensagens maiores com menor perda de desempenho. O AES é otimizado para grandes volumes de dados e oferece uma combinação de segurança e eficiência, tornando-se uma escolha ideal para cenários que demandam alta performance e manuseio de grandes quantidades de informação.
+Os testes de desempenho revelaram que, embora o RSA seja eficiente para mensagens curtas, o tempo de execução aumenta significativamente para mensagens maiores conforme aumentamos o tamanho da chave. Isso se deve à complexidade da aritmética modular com números grandes. A criptografia e descriptografia de mensagens longas resultaram em tempos de execução elevados, o que pode ser um fator limitante em aplicações práticas que exigem processamento em tempo real. No entanto, ao utilizar AES (Advanced Encryption Standard), é possível criptografar mensagens maiores com menor perda de desempenho. O AES é otimizado para grandes volumes de dados e oferece uma combinação de segurança e eficiência, tornando-se uma escolha ideal para cenários que demandam alta performance e manuseio de grandes quantidades de informação.
 
 \subsection*{Segurança}
 Os testes de segurança indicaram que o sistema RSA é robusto contra ataques de fatoração, desde que os números primos escolhidos sejam suficientemente grandes. No entanto, foi identificado que a geração de chaves pode ser um ponto fraco se não for realizada com cuidado, pois a escolha inadequada de primos pode comprometer a segurança. A análise de ataques de força bruta mostrou que, com números primos grandes, o RSA oferece uma segurança sólida contra tais ataques.
@@ -854,7 +902,7 @@ Foi realizada uma análise comparativa entre o RSA e outros algoritmos de cripto
 O RSA tem uma ampla gama de aplicações práticas, desde a segurança de comunicação em e-mails e navegadores da web até a assinatura digital de documentos e transações financeiras. No entanto, a aplicação do RSA em dispositivos com recursos limitados, como dispositivos móveis e IoT, pode ser desafiadora devido aos requisitos computacionais elevados.
 
 \subsection*{Melhorias Propostas}
-Para melhorar o desempenho do RSA, podem ser consideradas otimizações como a Exponenciação Modular Rápida e algoritmos eficientes de geração de primos. Além disso, a combinação do RSA com outros métodos de criptografia pode oferecer um equilíbrio entre segurança e eficiência. A implementação de hardware específico para operações aritméticas pode também melhorar o desempenho em aplicações críticas.
+A principal melhoria seria a combinação do RSA com outros métodos de criptografia para oferecer um equilíbrio entre segurança e eficiência, no caso acima utilizamos o AES mas outros algoritmos poderiam ser avaliados e testados de forma a encontrar um \textit{sweet spot}. A implementação de hardware específico para operações aritméticas pode também melhorar o desempenho em aplicações críticas, caso a implementação desse algoritmo fosse realizada em um sistema embarcado, a possibilidade de adicionar um circuito para auxiliar os cálculos realizados traria ganhos quando à performance e à eficiência do sistema.
 
 \section*{Conclusão}
 O sistema criptográfico RSA, embora complexo, é uma ferramenta poderosa para a criptografia de dados. A implementação prática do RSA mostrou-se eficaz na proteção de informações, confirmando a teoria subjacente. No entanto, desafios relacionados ao desempenho e à gestão de chaves foram identificados.

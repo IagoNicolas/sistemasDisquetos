@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1717371353.17543 "/home/necronzero/CLionProjects/sistemasDisquetos/report/main.tex" "main.pdf" "main" 1717371353.9609 0
-  "/home/necronzero/CLionProjects/sistemasDisquetos/report/main.tex" 1717371352.14605 53523 37f45321bd0ce45a362f39edace85759 ""
+["pdflatex"] 1717459478.46671 "/home/necronzero/CLionProjects/sistemasDisquetos/report/main.tex" "main.pdf" "main" 1717459479.47682 0
+  "/home/necronzero/CLionProjects/sistemasDisquetos/report/main.tex" 1717459478.10411 54322 765475b3fc770f2ba0fca9373d799324 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
@@ -92,9 +92,9 @@
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1714953600 40900 887e0dc8cac988a9e9c574af364cf837 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1716338091.02169 4602002 62dba5fc29055c16380d7393a2adb07a ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1716337570 7753326 f75403c6b94589e43201e26fb2301a34 ""
-  "main.aux" 1717371353.86208 958 781e17b50fe881fe5e54cb2630a9721f "pdflatex"
-  "main.out" 1717371353.57607 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.tex" 1717371352.14605 53523 37f45321bd0ce45a362f39edace85759 ""
+  "main.aux" 1717459479.33712 958 1751955bbeaea533efb4a290c9224164 "pdflatex"
+  "main.out" 1717459478.98512 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.tex" 1717459478.10411 54322 765475b3fc770f2ba0fca9373d799324 ""
   (generated)
   "main.aux"
   "main.log"
