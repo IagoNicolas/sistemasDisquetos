@@ -4,6 +4,10 @@
  *
  * This program demonstrates how to generate an RSA keypair, save the keys and key components,
  * encrypt and decrypt data, and sign and verify messages using the OpenSSL library.
+ *
+ * Usage:
+ * Compile the program with: gcc main_aes.c -o main_aes -lcrypto
+ * Run the program: ./main_aes
  */
 
 #include <time.h>
